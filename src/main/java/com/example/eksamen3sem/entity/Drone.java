@@ -17,7 +17,7 @@ public class Drone {
     @Column(nullable = false)
     private Status driftsstatus;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER) //So I am sure the stations are loaded before working with drone
     @JoinColumn(name = "station_id", nullable = false)
     private Station station;
 

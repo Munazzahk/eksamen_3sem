@@ -8,5 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface DroneRepository extends JpaRepository<Drone, Long> {
-    Drone findBySerialUuid(UUID serialUuid);
+    Drone findByDroneId(Long id);
 }

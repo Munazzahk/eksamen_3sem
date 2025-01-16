@@ -46,17 +46,17 @@ public class InitData implements CommandLineRunner {
 
         Drone drone1 = new Drone();
         drone1.setSerialUuid(UUID.randomUUID());
-        drone1.setDriftsstatus(Status.I_DRIFT);
+        drone1.setDriftsstatus(Status.ENABLED);
         drone1.setStation(station1);
 
         Drone drone2 = new Drone();
         drone2.setSerialUuid(UUID.randomUUID());
-        drone2.setDriftsstatus(Status.I_DRIFT);
+        drone2.setDriftsstatus(Status.ENABLED);
         drone2.setStation(station2);
 
         Drone drone3 = new Drone();
         drone3.setSerialUuid(UUID.randomUUID());
-        drone3.setDriftsstatus(Status.UDE_AF_DRIFT);
+        drone3.setDriftsstatus(Status.DISABLED);
         drone3.setStation(station3);
 
         droneService.save(drone1);
