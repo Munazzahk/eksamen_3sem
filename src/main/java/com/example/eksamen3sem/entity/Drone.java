@@ -11,7 +11,7 @@ public class Drone {
     private Long droneId;
 
     @Column(nullable = false, unique = true)
-    private UUID serialUuid;
+    private String serialUuid;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -30,11 +30,11 @@ public class Drone {
         this.droneId = droneId;
     }
 
-    public UUID getSerialUuid() {
+    public String getSerialUuid() {
         return serialUuid;
     }
 
-    public void setSerialUuid(UUID serialUuid) {
+    public void setSerialUuid(String serialUuid) {
         this.serialUuid = serialUuid;
     }
 

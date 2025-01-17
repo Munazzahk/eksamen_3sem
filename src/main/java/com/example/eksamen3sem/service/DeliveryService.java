@@ -101,4 +101,8 @@ public class DeliveryService {
     public void save(Delivery delivery) {
         deliveryRepository.save(delivery);
     }
+
+    public List<Delivery> findAll() {
+        return deliveryRepository.findAll();
+    }
 }

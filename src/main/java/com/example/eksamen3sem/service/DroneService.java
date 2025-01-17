@@ -34,7 +34,7 @@ public class DroneService {
         return droneRepository.findAll();
     }
 
-    public Drone addNewDrone() {
+    public void addNewDrone() {
         List<Station> stations = stationService.findAll();
 
         if (stations.isEmpty()) {
@@ -44,13 +44,12 @@ public class DroneService {
         Station targetStation = stationWithFewestDrones(stations);
 
         Drone newDrone = new Drone();
-        newDrone.setSerialUuid(UUID.randomUUID());
+        newDrone.setSerialUuid(UUID.randomUUID().toString());
         newDrone.setDriftsstatus(Status.ENABLED);
         newDrone.setStation(targetStation);
 
         droneRepository.save(newDrone);
 
-        return newDrone;
     }
 
     public Station stationWithFewestDrones(List<Station> stations) {
@@ -105,10 +104,10 @@ public class DroneService {
             throw new RuntimeException("Drone not found with id: " + id);
         }
         //If the drone is already retired
-        if (drone.getDriftsstatus() == Status.RETIRE) {
+        if (drone.getDriftsstatus() == Status.RETIRED) {
             throw new IllegalStateException("Drone is already retired");
         }
-        drone.setDriftsstatus(Status.RETIRE);
+        drone.setDriftsstatus(Status.RETIRED);
         droneRepository.save(drone);
     }
 
