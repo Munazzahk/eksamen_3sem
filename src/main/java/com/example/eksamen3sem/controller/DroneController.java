@@ -23,10 +23,10 @@ public class DroneController {
     }
 
     @PostMapping("/drones/add")
-    public ResponseEntity<?> addDrone() {
+    public ResponseEntity<Map<String, String>> addDrone() {
         try {
-            Drone newDrone = droneService.addNewDrone();
-            return ResponseEntity.status(HttpStatus.CREATED).body(newDrone); //200
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(Map.of("success", "New drone added")); //201
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST) //400
                     .body(Map.of("error", "No station found"));
@@ -37,7 +37,7 @@ public class DroneController {
     }
 
     @PostMapping("/drones/enable")
-    public ResponseEntity<?> enableDrone(Long id) {
+    public ResponseEntity<Map<String, String>> enableDrone(Long id) {
         try {
             droneService.enableDrone(id);
             return ResponseEntity.ok(Map.of("message", "Drone status updated to enabled"));
@@ -54,7 +54,7 @@ public class DroneController {
     }
 
     @PostMapping("/drones/disable")
-    public ResponseEntity<?> disableDrone(Long id) {
+    public ResponseEntity<Map<String, String>> disableDrone(Long id) {
         try {
             droneService.disableDrone(id);
             return ResponseEntity.ok(Map.of("message", "Drone status updated to disabled"));
@@ -71,7 +71,7 @@ public class DroneController {
     }
 
     @PostMapping("/drones/retire")
-    public ResponseEntity<?> retireDrone(Long id) {
+    public ResponseEntity<Map<String, String>> retireDrone(Long id) {
         try {
             droneService.retireDrone(id);
             return ResponseEntity.ok(Map.of("message", "Drone status updated to retired"));

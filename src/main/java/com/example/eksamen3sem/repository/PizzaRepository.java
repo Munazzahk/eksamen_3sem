@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PizzaRepository extends JpaRepository<Pizza, Long> {
-    Pizza findByTitel(String titel);
+    Pizza findByPizzaId(Long id);
 }

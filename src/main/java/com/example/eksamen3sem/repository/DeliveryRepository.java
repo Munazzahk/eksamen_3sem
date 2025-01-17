@@ -8,8 +8,7 @@ import java.util.List;
 
 @Repository
 public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
-    Delivery findByAddress(String address);
     List<Delivery> findByDroneIsNull();
 
-
+    List<Delivery> findByActualDeliveryIsNullOrderByExpectedDeliveryAsc();
 }

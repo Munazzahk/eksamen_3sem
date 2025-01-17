@@ -5,13 +5,15 @@ import com.example.eksamen3sem.repository.PizzaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class PizzaService {
     @Autowired
     PizzaRepository pizzaRepository;
 
-    public Pizza findByTitle(String title) {
-        return pizzaRepository.findByTitel(title);
+    public Pizza findById(Long id) {
+        return pizzaRepository.findByPizzaId(id);
     }
 
     public void save(Pizza pizza) {
