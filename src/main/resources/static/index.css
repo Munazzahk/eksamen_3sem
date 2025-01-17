@@ -1,10 +1,13 @@
 body {
     margin: 30px;
+    background-color: #fff9fa;
+    font-family: "Trebuchet MS", serif;
 }
 
 h1 {
     text-align: center;
     margin-bottom: 40px;
+    font-family: "Trebuchet MS", serif;
 }
 
 .button-container {

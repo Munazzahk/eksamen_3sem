@@ -14,6 +14,8 @@
     <button class="btn" id="all-drones-btn">All Drones</button>
     <button class="btn" id="undelivered-deliveries-btn">Undelivered Deliveries</button>
     <button class="btn" id="pizza-list-btn">Pizza List</button>
+    <button class="btn" id="enabled-drones-btn">Enabled Drones</button>
+
 </div>
 
 <!-- Error Modal -->
@@ -42,6 +44,10 @@
     });
 
     $("#pizza-list-btn").click(function() {
+        window.location.href = "/upcoming";
+    });
+
+    $("#enabled-drones-btn").click(function() {
         window.location.href = "/upcoming";
     });
 
