@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>DronePizza</title>
+    <link rel="stylesheet" th:href="@{/index.css}">
+    <link rel="stylesheet" th:href="@{/deliveries.css}">
+</head>
+<body>
+<h1>DronePizza Upcoming Delivery List</h1>
+<table id="deliveries-table">
+    <thead>
+    <tr>
+        <th>Address</th>
+        <th>Ordered Pizza</th>
+        <th>Expected Delivery</th>
+        <th>Drone Status</th>
+        <th>Delivery Status</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Rows inserted with jquery -->
+    </tbody>
+</table>
+<button class="btn" id="create-delivery">Create Delivery</button>
+<button class="btn" id="return-home">Return To Home</button>
+
+
+<!-- Error Modal -->
+<div id="error-modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <p id="error-message"></p>
+    </div>
+</div>
+
+</body>
+</html>
+
+<script>
+    //Function to fetch and display the deliveries
+    function fetchDeliveries() {
+        $.get("/api/deliveries", function(data) {
+            const tableBody = $("#deliveries-table tbody");
+            tableBody.empty(); //Clear existing table rows
+
+            //Loop through the deliveries and add each one to the table
+            data.forEach(delivery => {
+                const droneStatus = delivery.drone ? "Assigned" : "Not Assigned";
+                const actionButton = delivery.drone
+                    ? `<button class="btn delivered" data-id="${delivery.deliveryId}">Mark as Delivered</button>`
+                    : `<button class="btn assign-drone" data-id="${delivery.deliveryId}">Assign Drone</button>`;
+
+                // Format the expectedDelivery timestamp
+                const expectedDelivery = new Date(delivery.expectedDelivery);
+                const formattedExpectedDelivery = expectedDelivery.toLocaleString('en-GB', {
+                    weekday: 'short', // fx "Mon"
+                    year: 'numeric',
+                    month: 'short', // fx "Jan"
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                //Append the delivery row to the table
+                tableBody.append(`
+                <tr>
+                    <td>${delivery.address}</td>
+                    <td>${delivery.pizza.title}</td>
+                    <td>${formattedExpectedDelivery}</td>
+                    <td>${droneStatus}</td>
+                    <td>${delivery.actualDelivery ? "Delivered" : "Not Delivered"}</td>
+                    <td>${actionButton}</td>
+
+                </tr>
+            `);
+            });
+        })
+        .fail(function(jqXHR) {
+            const errorMessage = jqXHR.responseJSON ? jqXHR.responseJSON.error : "Could not fetch the deliveries";
+            showError(errorMessage);
+        });
+    }
+
+    //Initial fetch when the page loads
+    fetchDeliveries();
+
+    //Update the deliveries list every 60 seconds
+    setInterval(fetchDeliveries, 60000);
+
+    $(document).on("click", ".assign-drone", function() {
+        const deliveryId = $(this).data("id");
+        console.log(deliveryId)
+        $.post(`/api/deliveries/schedule?deliveryId=${deliveryId}`)
+            .done(function() {
+                fetchDeliveries();
+            })
+            .fail(function(jqXHR) {
+                const errorMessage = jqXHR.responseJSON ? jqXHR.responseJSON.error : "Could not assign a drone";
+                showError(errorMessage);
+            });
+    });
+
+    $("#create-delivery").click(function() {
+        $.post("/api/deliveries/add")
+            .done(function() {
+                fetchDeliveries();
+            })
+            .fail(function(jqXHR) {
+                const errorMessage = jqXHR.responseJSON ? jqXHR.responseJSON.error : "Could not add a delivery";
+                showError(errorMessage);
+            });
+    });
+
+    $(document).on("click", ".delivered", function() {
+        const deliveryId = $(this).data("id");
+        $.post(`/api/deliveries/finish?deliveryId=${deliveryId}`)
+            .done(function() {
+                fetchDeliveries();
+            })
+            .fail(function(jqXHR) {
+                const errorMessage = jqXHR.responseJSON ? jqXHR.responseJSON.error : "Could not mark as delivered";
+                showError(errorMessage);
+            });
+    });
+
+    function showError(message) {
+        const modal = document.getElementById("error-modal");
+        const messageElement = document.getElementById("error-message");
+        messageElement.textContent = message;
+        modal.style.display = "block";
+    }
+
+    document.querySelector(".close-btn").onclick = function() {
+        document.getElementById("error-modal").style.display = "none";
+    };
+
+    $("#return-home").click(function() {
+        window.location.href = "/";
+    });
+
+</script>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>DronePizza</title>
+    <link rel="stylesheet" th:href="@{/index.css}">
+    <link rel="stylesheet" th:href="@{/deliveries.css}">
+</head>
+<body>
+<h1>DronePizza Drone List</h1>
+<table id="drones-table">
+    <thead>
+    <tr>
+        <th>UUID</th>
+        <th>Status</th>
+        <th>Station</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Rows inserted with jquery -->
+    </tbody>
+</table>
+
+<button class="btn" id="create-drone">Add New Drone</button>
+<button class="btn" id="return-home">Return To Home</button>
+
+
+
+<!-- Error Modal -->
+<div id="error-modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <p id="error-message"></p>
+    </div>
+</div>
+
+</body>
+</html>
+
+<script>
+    //Function to fetch and display the drones
+    function fetchDrones() {
+        $.get("/api/drones", function(data) {
+            const tableBody = $("#drones-table tbody");
+            tableBody.empty();
+
+            data.forEach(drone => {
+                const status = drone.driftsstatus;
+                const stationLat = drone.station ? drone.station.latitude : "No Station";
+                const stationLon = drone.station ? drone.station.longitude : "No Station";
+
+                tableBody.append(`
+                <tr>
+                    <td>${drone.serialUuid}</td>
+                    <td>${status}</td>
+                    <td>Lat: ${stationLat}, Lon: ${stationLon}</td>
+                </tr>
+            `);
+            });
+        }).fail(function(jqXHR) {
+            const errorMessage = jqXHR.responseJSON ? jqXHR.responseJSON.error : "Could not fetch drones";
+            showError(errorMessage);
+        });
+    }
+
+    //Initial fetch when the page loads
+    fetchDrones();
+
+    //Update the drones list every 60 seconds
+    setInterval(fetchDrones, 60000);
+
+    $("#create-drone").click(function() {
+        $.post("/api/drones/add")
+            .done(function() {
+                fetchDrones();
+            }).fail(function(jqXHR) {
+            const errorMessage = jqXHR.responseJSON ? jqXHR.responseJSON.error : "Could not add a drone";
+            showError(errorMessage);
+            });
+    });
+
+    function showError(message) {
+        const modal = document.getElementById("error-modal");
+        const messageElement = document.getElementById("error-message");
+        messageElement.textContent = message;
+        modal.style.display = "block";
+    }
+
+    document.querySelector(".close-btn").onclick = function() {
+        document.getElementById("error-modal").style.display = "none";
+    };
+
+    $("#return-home").click(function() {
+        window.location.href = "/";
+    });
+
+</script>

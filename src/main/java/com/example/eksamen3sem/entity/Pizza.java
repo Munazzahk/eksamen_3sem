@@ -9,7 +9,7 @@ public class Pizza {
     private Long pizzaId;
 
     @Column(nullable = false, unique = true)
-    private String titel;
+    private String title;
 
     @Column(nullable = false)
     private int price;
@@ -23,12 +23,12 @@ public class Pizza {
         this.pizzaId = pizzaId;
     }
 
-    public String getTitel() {
-        return titel;
+    public String getTitle() {
+        return title;
     }
 
-    public void setTitel(String titel) {
-        this.titel = titel;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public int getPrice() {

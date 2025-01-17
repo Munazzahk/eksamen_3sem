@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class DeliveryService {
@@ -32,20 +33,38 @@ public class DeliveryService {
         return deliveryRepository.findByActualDeliveryIsNullOrderByExpectedDeliveryAsc();
     }
 
-    public void addDelivery(Long pizzaId, String address) {
-        Pizza pizza = pizzaService.findById(pizzaId);
+    public void addDelivery() {
+        Random random = new Random();
 
-        if (pizza == null) {
+        List<Pizza> pizzas = pizzaService.findAll();
+
+        if (pizzas == null) {
             throw new RuntimeException("Pizza not found");
         }
 
         Delivery delivery = new Delivery();
-        delivery.setPizza(pizza);
-        delivery.setAddress(address);
+        delivery.setPizza(pizzas.get(random.nextInt(pizzas.size()))); //Random pizza from db
+        delivery.setAddress(randomAddress());
         delivery.setExpectedDelivery(LocalDateTime.now().plusMinutes(30));
         delivery.setDrone(null);
 
         deliveryRepository.save(delivery);
+    }
+
+    public String randomAddress() {
+        Random random = new Random();
+
+        String[] possibleAddresses = {
+                "Vesterbrogade 12, 1620 København V",
+                "Amagerbrogade 23, 2300 København S",
+                "Hvidovrevej 30, 2650 Hvidovre",
+                "Sundbyvestervej 12, 2300 København S",
+                "Hvidovrevej 58, 2650 Hvidovre",
+                "Hovedgaden 123, 2640 Hedehusene",
+                "Københavnsvej 8, 2630 Taastrup"
+        };
+
+        return possibleAddresses[random.nextInt(possibleAddresses.length)];
     }
 
     public void scheduleDelivery(Long deliveryId) {
@@ -79,4 +98,7 @@ public class DeliveryService {
         deliveryRepository.save(delivery);
     }
 
+    public void save(Delivery delivery) {
+        deliveryRepository.save(delivery);
+    }
 }

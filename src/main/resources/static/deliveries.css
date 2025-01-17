@@ -1,0 +1,37 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.btn.assign-drone {
+    padding: 5px 10px;
+    margin: 5px;
+    cursor: pointer;
+    background-color: rgba(147, 106, 84, 0.7);
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+.btn.assign-drone:hover {
+    background-color: rgba(35, 24, 24, 0.7);
+}
+
+.btn.delivered {
+    padding: 5px 10px;
+    margin: 5px;
+    cursor: pointer;
+    background-color: rgba(35, 24, 24, 0.7);
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+.btn.delivered:hover {
+    background-color: rgba(147, 106, 84, 0.7);
+}
